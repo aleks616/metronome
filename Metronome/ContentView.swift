@@ -2,35 +2,40 @@ import AudioToolbox
 import SwiftUI
 import WrappingHStack
 
-struct TempoItem {
-	var tempo:Int
-	var signature:String
+enum Signature: String, CaseIterable, Hashable {
+	case threeFour = "3/4"
+	case sixEight = "6/8"
+	case fourFour = "4/4"
+	case fiveFour = "5/4"
+	case twelveEight = "12/8"
+}
+
+struct TempoItem: Hashable {
+	var tempo: Int
+	var signature: Signature
 }
 
 struct ContentView: View {
-	private let signatures = ["3/4", "6/8", "4/4", "5/4", "12/8"]
-	@State private var tempo = 160
-	@State private var signature = "4/4"
+	@State private var tempoItem = TempoItem(tempo: 160, signature: .fourFour)
 	@State private var isRunning = false
 	@State private var activeBeat: Int?
-	@State private var nextTempo: Int? = nil
-	@State private var nextSignature: String? = nil
-	@State private var savedOptions: [(Int,String)] = [(160,"4/4")]
-
+	@State private var nextTempoItem: TempoItem?
+	@State private var savedOptions: [TempoItem] = [TempoItem(tempo: 160, signature: .fourFour)]
+	
 	var beatCount: Int {
-		Int(signature.split(separator: "/").first ?? "4") ?? 4
+		Int(tempoItem.signature.rawValue.split(separator: "/").first ?? "4") ?? 4
 	}
-
+	
 	var tempoOptions = [-10, -1, +1, +10]
-
+	
 	var body: some View {
 		VStack(spacing: 8) {
-			Text("\(tempo)").font(.system(size: 92))
+			Text("\(tempoItem.tempo)").font(.system(size: 92))
 			HStack(spacing: 8) {
 				ForEach(tempoOptions, id: \.self) { opt in
 					let optText = opt < 0 ? "\(opt)" : "+\(opt)"
 					Button("\(optText)") {
-						tempo += opt
+						tempoItem.tempo += opt
 					}
 					.controlSize(.large)
 					.buttonStyle(.glass)
@@ -40,16 +45,15 @@ struct ContentView: View {
 				}
 			}
 			.frame(maxWidth: .infinity)
-			Picker("Signature", selection: $signature) {
-				ForEach(signatures, id: \.self) { value in
-					Text(value).tag(value)
+			Picker("Signature", selection: $tempoItem.signature) {
+				ForEach(Signature.allCases, id: \.self) { value in
+					Text(value.rawValue).tag(value)
 				}
 			}
 			.pickerStyle(.wheel)
-			.onChange(of: signature) {
+			.onChange(of: tempoItem.signature) {
 				activeBeat = nil
 			}
-
 			HStack(spacing: 12) {
 				ForEach(0..<beatCount, id: \.self) { beat in
 					Circle()
@@ -68,10 +72,8 @@ struct ContentView: View {
 				.controlSize(.extraLarge)
 				Spacer()
 				Button("Save") {
-					if !savedOptions.contains(where: {(x,y) in
-						return x == tempo && y == signature
-					}) {
-						savedOptions.append((tempo,signature))
+					if !savedOptions.contains(tempoItem) {
+						savedOptions.append(tempoItem)
 						if savedOptions.count > 6 {
 							savedOptions.remove(at: 0)
 						}
@@ -82,10 +84,9 @@ struct ContentView: View {
 			}
 			Spacer()
 			WrappingHStack {
-				ForEach(savedOptions, id: \.self.1) { tempo in
-					Button("\(tempo.0) - \(tempo.1)") {
-						nextTempo = tempo.0
-						nextSignature = tempo.1
+				ForEach(savedOptions, id: \.self) { item in
+					Button("\(item.tempo) - \(item.signature.rawValue)") {
+						nextTempoItem = item
 					}.buttonStyle(.glass)
 						.controlSize(.large)
 				}
@@ -94,23 +95,21 @@ struct ContentView: View {
 		.padding()
 		.task(id: isRunning) {
 			guard isRunning else { return }
-
+			
 			while !Task.isCancelled {
 				let nextBeat = activeBeat.map { ($0 + 1) % beatCount } ?? 0
 				activeBeat = nextBeat
-				if nextBeat == 0 && nextTempo != nil {
-					tempo = nextTempo!
-					nextTempo = nil
-					signature = nextSignature!
-					nextSignature = nil
+				if nextBeat == 0 && nextTempoItem != nil {
+					tempoItem = nextTempoItem!
+					nextTempoItem = nil
 				}
 				AudioServicesPlaySystemSound(nextBeat == 0 ? 1057 : 1104)
-
+				
 				do {
 					let denominator =
-						Double(signature.split(separator: "/").last ?? "4") ?? 4
+					Double(tempoItem.signature.rawValue.split(separator: "/").last ?? "4") ?? 4
 					try await Task.sleep(
-						for: .seconds(60.0 / Double(tempo) * 4.0 / denominator)
+						for: .seconds(60.0 / Double(tempoItem.tempo) * 4.0 / denominator)
 					)
 				} catch {
 					return
