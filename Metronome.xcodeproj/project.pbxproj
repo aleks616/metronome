@@ -6,6 +6,10 @@
 	objectVersion = 110;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		556540F630967ABB00E64943 /* WrappingHStack in Frameworks */ = {isa = PBXBuildFile; productRef = 556540F530967ABB00E64943 /* WrappingHStack */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		556540E63096666000E64943 /* Metronome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Metronome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -22,6 +26,7 @@
 		556540E33096666000E64943 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				556540F630967ABB00E64943 /* WrappingHStack in Frameworks */,
 			);
 		};
 /* End PBXFrameworksBuildPhase section */
@@ -60,6 +65,9 @@
 				556540E83096666000E64943 /* Metronome */,
 			);
 			name = Metronome;
+			packageProductDependencies = (
+				556540F530967ABB00E64943 /* WrappingHStack */,
+			);
 			productName = Metronome;
 			productReference = 556540E63096666000E64943 /* Metronome.app */;
 			productType = "com.apple.product-type.application";
@@ -88,6 +96,9 @@
 			);
 			mainGroup = 556540DD3096666000E64943;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				556540F430967ABB00E64943 /* XCRemoteSwiftPackageReference "WrappingHStack" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 556540E73096666000E64943 /* Products */;
 			projectDirPath = "";
@@ -320,6 +331,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		556540F430967ABB00E64943 /* XCRemoteSwiftPackageReference "WrappingHStack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ksemianov/WrappingHStack";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		556540F530967ABB00E64943 /* WrappingHStack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 556540F430967ABB00E64943 /* XCRemoteSwiftPackageReference "WrappingHStack" */;
+			productName = WrappingHStack;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 556540DE3096666000E64943 /* Project object */;
 	validationLevel = 1;
