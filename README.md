@@ -14,4 +14,4 @@ iOS 26 or later.
 
 Open `Metronome.xcodeproj` in Xcode and run the Metronome target on an iPhone or simulator.
 
-<img src="metronome-screen.png" alt="App screenshot" height="200">
+<img src="metronome-screen.png" alt="App screenshot" height="500">
