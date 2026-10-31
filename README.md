@@ -13,3 +13,5 @@ iOS 26 or later.
 ## Open the project
 
 Open `Metronome.xcodeproj` in Xcode and run the Metronome target on an iPhone or simulator.
+
+![title](metronome-screen.png)
