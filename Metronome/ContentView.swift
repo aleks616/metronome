@@ -50,7 +50,7 @@ struct ContentView: View {
 					Text(value.rawValue).tag(value)
 				}
 			}
-			.pickerStyle(.wheel)
+			.pickerStyle(.inline)
 			.onChange(of: tempoItem.signature) {
 				activeBeat = nil
 			}
